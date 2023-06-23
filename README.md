@@ -43,19 +43,23 @@ I have found that, occasionally, I have set the Linear Advance factor to a value
     Import it into SuperSlicer and save it. Now, use the built in Retraction Calibration that SuperSlicer has to determine the retraction needed for your particular filament. Read through the prompt that appears when you set up the test, it will tell you everything that you need to know to preform it.
 
     ![SuperSlicer-Retraction-Test](Example_Pictures/Step-5/Extruder_Retraction_SuperSlicer.png)
-    
+
     - If you haven't noticed any problems with stringing, and don't notice any in the Fan Speed Test, this step can be skipped. Generally, with a good direct drive setup, the only filaments that will need a different retraction value are very soft flexible filaments and exotic filaments such as Carbon Fiber filled PLA.
 6. Fan Speed Test
-    - Import Ultimate Fan Test v3_ABYSS.stl into your slicer. In PrusaSlicer, enable Keep Fan Always on, and disable Enable Auto Cooling. Use a 0.2mm layer height. Set your minimum fan speed to 100% and bridging to 0%. Disable the fan for the first layer, and set Full Fan Speed at Layer to 500. This will cause your fan to spin progressively faster as the model is printed, starting at 0% fan speed and ending at 100% fan speed. When the model is finished, take a look at each marked bar and the area above it. Choose the lowest fan speed that gives good results as your minimum fan speed. Generally, no curling and decent looking bridges are the best things to look for for this setting. Then look at the bridging sections and choose the one that looks the best to you, that is your bridging fan speed. Set your maximum fan speed to somewhere between these two values. Be careful of setting it too high as strong cooling setups will decrease layer adhesion if run too fast when not needed.
+    - Import [Ultimate_Fan_Test_v3_ABYSS.stl](Tuning-Models/Ultimate_Fan_Test_v3_ABYSS.stl) into your slicer. Use a 0.2mm layer height and change your cooling settings to the following.
+    
+    ![Fan_Speed_Settings](Example_Pictures/Step-6/Fan_Test_Settings.webp)
+    
+    This will cause your fan to spin progressively faster as the model is printed, starting at 0% fan speed and ending at 100% fan speed. When the model is finished, take a look at each marked bar and the area above it. Choose the lowest fan speed that gives good results as your minimum fan speed. Generally, no curling and decent looking bridges are the best things to look for for this setting. Then look at the bridging sections and choose the one that looks the best to you, that is your bridging fan speed. Set your maximum fan speed to somewhere between these two values. Be careful of setting it too high as strong cooling setups will decrease layer adhesion if run too fast when not needed.
 7. Minimum Layer Time Test
-    - Use Minimum Layer Time Test.3mf
+    - Use [Minimum-Layer-Time-Test.3mf](Tuning-Models/Minimum-Layer-Time-Test.3mf)
     - Set your minimum layer time to 5 to start, and print this model. If there is curling on the walls, increase the time by two seconds until there isn't curling anymore. The setting where there isn't anymore curling is your new minimum layer time setting.
 8. Minimum Layer Speed Test
-    - Use Test Pieces_Cone 10mm Tall.stl
+    - Use [Test_Pieces_Cone-10mm-Tall.stl](Tuning-Models/Test_Pieces_Cone-10mm-Tall.stl)
     - Set your minimum layer speed to 15mm/s. Print out this file. If the plastic looks excessively melted, lower the speed by 3 mm/s. The upper 5 mm or so of this model will never look perfect as it is unresonable to expect that kind of accuracy from a 0.4mm nozzle. Once you find a speed that you are happy with, save it. Be careful of going too low in speed, as it will cause problems to creep back in. If the nozzle is moving too slowly, it sits above one spot for too long, reheating the filament and causing the same issues as running too fast.
 9. Validate Results
-    - Print a Voron Cube to validate bridging and corner accuracy
-    - Print a Cali-Dragon to validate small detail quality, layer quality, and cooling characteristics
+    - Print a [Voron Cube](Tuning-Models/Voron_Design_Cube_v7.stl) to validate bridging and corner accuracy
+    - Print a [Cali Dragon](Tuning-Models/Cali-Dragon_v1.stl) to validate small detail quality, layer quality, and cooling characteristics
 
 ### Optional (but still recommended) Steps
 
