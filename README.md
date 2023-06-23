@@ -24,15 +24,26 @@ I have found that, occasionally, I have set the Linear Advance factor to a value
 1. Temperature Test
     - Set Hotend to the lowest recommended temperature on the spool. Unlatch extruder and set hotend to 10 C higher than the highest recommended temperature on the spool. Start slowly pushing filament by hand through the hotend at the same time, keeping as near constant pressure as possible. Watch the temperature as you push the filament, you should notice that the filament gets noticably easier to push as the temperature hits certain numbers. Once the hotend has gotten up to the final temperature, choose which of those temperatures that it got easier to push at to use. Generally, the best temperature is somewhere in the middle of the recommended temperatures on a standard 0.4mm brass nozzle, however this is not a steadfast rule. Hardened steel nozzles tend to need to run about 10-15 C hotter than brass.
 2. Volumetric Flowrate Test
-    - Uses Volumetric Flow Test RR.3mf
+    - Uses [Volumetric-Flow-Test-RR.3mf](Tuning-Models/Volumetric-Flow-Test-RR.3mf)
 3. Linear Advance Test
-    - Follow the klipper documentation for this and use square_tower.stl
+    - Follow the klipper documentation for this and use [square_tower.stl](Tuning-Models/square_tower.stl)
     - [Klipper Pressure Advance Documentation](https://www.klipper3d.org/Pressure_Advance.html)
 4. Flow test
-    - Create a ~25mm<sup>3</sup> cube in your slicer. Set your slicer to vase mode, and take note of your external perimeter line width. Once the cube is printed, allow it to cool, then take a pair of calipers and measure the thickness of each wall. I only recommend putting the calipers, at maximum, ~2mm down the sides of the cube to prevent too much variation from layer wobble. Take the average of your measurements, then divide your line width by that average. This will give the correct flowrate for the tested filament.
+    - Create a ~25mm<sup>3</sup> cube in your slicer. Set your slicer to vase mode, and take note of your external perimeter line width. You should be printing an object similar to the following.
+    
+    ![Flowtest-Example](Example_Pictures/Step-4/Flowrate_Test.png)
+
+    Allow the cube to cool before removing it from the buildplate, then take a pair of calipers and measure the thickness of each wall. I only recommend putting the calipers, at maximum, ~2mm down the sides of the cube to prevent excessive variation from layer wobble. Take the average of your measurements, then divide your line width by that average. This will give the correct flowrate for the tested filament.
     - +-2% flow rate is negligible due to variation of filament diameter. In other words, if your result returns a number between 0.98 and 1.02, don't change your flow rate, it will cause more problems than it will solve.
 5. Retraction Test
-    - Take the config that you have been using so far, and export it from PrusaSlicer. Import it into SuperSlicer and save it. Now, use the built in Retraction Calibration that SuperSlicer has to determine the retraction needed for your particular filament
+    - Take the config that you have been using so far, and export it from PrusaSlicer. 
+    
+    ![Config-Export](Example_Pictures/Step-5/Export_Config.png)
+    
+    Import it into SuperSlicer and save it. Now, use the built in Retraction Calibration that SuperSlicer has to determine the retraction needed for your particular filament. Read through the prompt that appears when you set up the test, it will tell you everything that you need to know to preform it.
+
+    ![SuperSlicer-Retraction-Test](Example_Pictures/Step-5/Extruder_Retraction_SuperSlicer.png)
+    
     - If you haven't noticed any problems with stringing, and don't notice any in the Fan Speed Test, this step can be skipped. Generally, with a good direct drive setup, the only filaments that will need a different retraction value are very soft flexible filaments and exotic filaments such as Carbon Fiber filled PLA.
 6. Fan Speed Test
     - Import Ultimate Fan Test v3_ABYSS.stl into your slicer. In PrusaSlicer, enable Keep Fan Always on, and disable Enable Auto Cooling. Use a 0.2mm layer height. Set your minimum fan speed to 100% and bridging to 0%. Disable the fan for the first layer, and set Full Fan Speed at Layer to 500. This will cause your fan to spin progressively faster as the model is printed, starting at 0% fan speed and ending at 100% fan speed. When the model is finished, take a look at each marked bar and the area above it. Choose the lowest fan speed that gives good results as your minimum fan speed. Generally, no curling and decent looking bridges are the best things to look for for this setting. Then look at the bridging sections and choose the one that looks the best to you, that is your bridging fan speed. Set your maximum fan speed to somewhere between these two values. Be careful of setting it too high as strong cooling setups will decrease layer adhesion if run too fast when not needed.
