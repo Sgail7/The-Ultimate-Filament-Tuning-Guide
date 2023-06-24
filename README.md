@@ -22,9 +22,43 @@ I have found that, occasionally, I have set the Linear Advance factor to a value
 ### Mandatory Steps
 
 1. Temperature Test
-    - Set Hotend to the lowest recommended temperature on the spool. Unlatch extruder and set hotend to 10 C higher than the highest recommended temperature on the spool. Start slowly pushing filament by hand through the hotend at the same time, keeping as near constant pressure as possible. Watch the temperature as you push the filament, you should notice that the filament gets noticably easier to push as the temperature hits certain numbers. Once the hotend has gotten up to the final temperature, choose which of those temperatures that it got easier to push at to use. Generally, the best temperature is somewhere in the middle of the recommended temperatures on a standard 0.4mm brass nozzle, however this is not a steadfast rule. Hardened steel nozzles tend to need to run about 10-15 C hotter than brass.
+    <details>
+
+    <summary>Click here for Procedure</summary>
+
+    Set Hotend 10 C below the lowest recommended temperature on the spool. Unlatch extruder and set hotend to 10 C higher than the highest recommended temperature on the spool. Start slowly pushing filament by hand through the hotend at the same time, keeping as near constant pressure as possible. Watch the temperature as you push the filament, you should notice that the filament gets noticably easier to push as the temperature hits certain numbers. Once the hotend has gotten up to the final temperature, choose which of those temperatures that it got easier to push at to use. Generally, the best temperature is somewhere in the middle of the recommended temperatures on a standard 0.4mm brass nozzle, however, this is not a steadfast rule. Hardened steel nozzles tend to need to run about 10-15 C hotter than brass.
+
+    </details>
+
 2. Volumetric Flowrate Test
     - Uses [Volumetric-Flow-Test-RR.3mf](Tuning-Models/Volumetric-Flow-Test-RR.3mf)
+    - This test was designed by Yathani on Printables! Go check it out here: [Volumetric Flow Test for RatRig V-CORE3](https://www.printables.com/model/328223-volumetric-flow-test-for-ratrig-v-core3)
+    <details>
+
+    <summary>Click here for Procedure</summary>
+
+    Import the file into PrusaSlicer, making sure to select "Import 3D models only".
+
+    ![3MF](Example_Pictures/Step-2/Import 3MF.png)
+
+    Turn on Spiral Vase for this test. This test works by increasing your printer's feedrate by 100% every 5 mm in z-height. For a standard flow hotend, you'll want to step up in 2 mm<sup>3</sup>/s increments; for high-flow hotends, you'll want to step up 2-5 mm<sup>3</sup>/s increments, depending on the advertised maximum flowrate of your hotend. The final volumetric flowrate will be 12 times the starting flowrate.
+
+    Volumetric flow rate can be calculated as $VFR=Layer height*Layer width*Layer Speed$. Because layer height and layer width stay constant during a print, we want to change the layer speed of the external perimeters to control the volumtric flowrate of the test. Rearranging the equation, and using 2 mm<sup>3</sup>/s as the target volumtric flow rate, we can find our needed external perimeter speed for this print.
+
+    $$Layer Speed=2/(Layer width*Layer height)$$
+
+    Using a 0.4mm layer width with a 0.2mm layer height as an example, we obtain this answer
+
+    $$Layer Speed=2/(0.4*0.2)$$
+
+    $$Layer Speed=25mm/s$$
+
+    Set your external perimeter speed to the value you obtain, and run the print. If you feel that the final volumetric flow rate is far past the limit of your hotend, you can scale the model in only z-height in PrusaSlicer to obtain a lower final volumetric flow rate.
+
+    ![External-Perimeter-Location](Example_Pictures/Step-2/External Perimeter Speed Location.png)
+
+    </details>
+
 3. Linear Advance Test
     - Follow the klipper documentation for this and use [square_tower.stl](Tuning-Models/square_tower.stl)
     - [Klipper Pressure Advance Documentation](https://www.klipper3d.org/Pressure_Advance.html)
@@ -51,6 +85,9 @@ I have found that, occasionally, I have set the Linear Advance factor to a value
     ![Fan_Speed_Settings](Example_Pictures/Step-6/Fan_Test_Settings.webp)
     
     This will cause your fan to spin progressively faster as the model is printed, starting at 0% fan speed and ending at 100% fan speed. When the model is finished, take a look at each marked bar and the area above it. Choose the lowest fan speed that gives good results as your minimum fan speed. Generally, no curling and decent looking bridges are the best things to look for for this setting. Then look at the bridging sections and choose the one that looks the best to you, that is your bridging fan speed. Set your maximum fan speed to somewhere between these two values. Be careful of setting it too high as strong cooling setups will decrease layer adhesion if run too fast when not needed.
+
+    - This test was designed by Abyss on Printables! Go check it out here: [Ultimate Fan Speed Test V3](https://www.printables.com/model/200347-ultimate-fan-speed-test-v3)
+
 7. Minimum Layer Time Test
     - Use [Minimum-Layer-Time-Test.3mf](Tuning-Models/Minimum-Layer-Time-Test.3mf)
     - Set your minimum layer time to 5 to start, and print this model. If there is curling on the walls, increase the time by two seconds until there isn't curling anymore. The setting where there isn't anymore curling is your new minimum layer time setting.
