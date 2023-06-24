@@ -21,7 +21,7 @@ I have found that, occasionally, I have set the Linear Advance factor to a value
 
 ### Mandatory Steps
 
-**1. Temperature Test**
+1. **Temperature Test**
     <details>
 
     <summary>Click here for Procedure</summary>
@@ -30,7 +30,7 @@ I have found that, occasionally, I have set the Linear Advance factor to a value
 
     </details>
 
-**2. Volumetric Flowrate Test**
+2. **Volumetric Flowrate Test**
 - Uses [Volumetric-Flow-Test-RR.3mf](Tuning-Models/Volumetric-Flow-Test-RR.3mf)
 - This test was designed by Yathani on Printables! Go check it out here: [Volumetric Flow Test for RatRig V-CORE3](https://www.printables.com/model/328223-volumetric-flow-test-for-ratrig-v-core3)
 
@@ -63,11 +63,11 @@ I have found that, occasionally, I have set the Linear Advance factor to a value
 
     </details>
 
-**3. Linear Advance Test**
+3. **Linear Advance Test**
     - Follow the klipper documentation for this and use [square_tower.stl](Tuning-Models/square_tower.stl)
     - [Klipper Pressure Advance Documentation](https://www.klipper3d.org/Pressure_Advance.html)
 
-**4. Flow test**
+4. **Flow test**
     <details>
 
     <summary>Click here for Procedure</summary>
@@ -97,7 +97,7 @@ I have found that, occasionally, I have set the Linear Advance factor to a value
 
     </details>
 
-**5. Retraction Test**
+5. **Retraction Test**
     - Take the config that you have been using so far, and export it from PrusaSlicer. 
     
     ![Config-Export](Example_Pictures/Step-5/Export_Config.png)
@@ -107,7 +107,7 @@ I have found that, occasionally, I have set the Linear Advance factor to a value
     ![SuperSlicer-Retraction-Test](Example_Pictures/Step-5/Extruder_Retraction_SuperSlicer.png)
 
     - If you haven't noticed any problems with stringing, and don't notice any in the Fan Speed Test, this step can be skipped. Generally, with a good direct drive setup, the only filaments that will need a different retraction value are very soft flexible filaments and exotic filaments such as Carbon Fiber filled PLA.
-**6. Fan Speed Test**
+6. **Fan Speed Test**
     - Import [Ultimate_Fan_Test_v3_ABYSS.stl](Tuning-Models/Ultimate_Fan_Test_v3_ABYSS.stl) into your slicer. Use a 0.2mm layer height and change your cooling settings to the following.
     
     ![Fan_Speed_Settings](Example_Pictures/Step-6/Fan_Test_Settings.webp)
@@ -116,13 +116,13 @@ I have found that, occasionally, I have set the Linear Advance factor to a value
 
     - This test was designed by Abyss on Printables! Go check it out here: [Ultimate Fan Speed Test V3](https://www.printables.com/model/200347-ultimate-fan-speed-test-v3)
 
-**7. Minimum Layer Time Test**
+7. **Minimum Layer Time Test**
     - Use [Minimum-Layer-Time-Test.3mf](Tuning-Models/Minimum-Layer-Time-Test.3mf)
     - Set your minimum layer time to 5 to start, and print this model. If there is curling on the walls, increase the time by two seconds until there isn't curling anymore. The setting where there isn't anymore curling is your new minimum layer time setting.
-**8. Minimum Layer Speed Test**
+8. **Minimum Layer Speed Test**
     - Use [Test_Pieces_Cone-10mm-Tall.stl](Tuning-Models/Test_Pieces_Cone-10mm-Tall.stl)
     - Set your minimum layer speed to 15mm/s. Print out this file. If the plastic looks excessively melted, lower the speed by 3 mm/s. The upper 5 mm or so of this model will never look perfect as it is unresonable to expect that kind of accuracy from a 0.4mm nozzle. Once you find a speed that you are happy with, save it. Be careful of going too low in speed, as it will cause problems to creep back in. If the nozzle is moving too slowly, it sits above one spot for too long, reheating the filament and causing the same issues as running too fast.
-**9. Validate Results**
+9. **Validate Results**
     - Print a [Voron Cube](Tuning-Models/Voron_Design_Cube_v7.stl) to validate bridging and corner accuracy
     - Print a [Cali Dragon](Tuning-Models/Cali-Dragon_v1.stl) to validate small detail quality, layer quality, and cooling characteristics
 
