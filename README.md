@@ -1,6 +1,6 @@
 # The Ultimate Filament Tuning Guide
 
-## How to tune 3D printer filaments to perfection!
+### How to tune 3D printer filaments to perfection!
 
 This guide details how I tune in my 3d printing filaments. It takes approximately 60-70 grams of filament and a few hours of time, including print times. If your printer profiles are tuned in properly, following this guide will give you the best settings possible for your various filaments. This is NOT a guide on how to fine tune your printer's motion system and settings, for that, please see [Ellis' Excellent Print Tuning Guide](https://ellis3dp.com/Print-Tuning-Guide/). My flowrate calibration method does not agree with his, however I am more interested in the dimensional accuracy of my parts rather than their looks.
 
@@ -8,13 +8,37 @@ This guide assumes that you are using Klipper firmware, but everything except fo
 
 All needed models and .3mf files are included in the [Tuning Models](Tuning-Models) folder. The guide will detail which model to use for each test. I highly recommend following the Mandatory Steps section of the guide in order, as it will give the least variation in results, but you may follow this guide in whatever order you choose.
 
-I have found that, occasionally, I have set the Linear Advance factor to a value that is either too high or too low, and have needed to preform the Linear Advance Test a second time to get good results. If you notice slight problems that can be attributed to a wrong interpretation of a test's results, I recommend finishing the entirety of the [Mandatory Steps](https://github.com/Sgail7/The-Ultimate-Filament-Tuning-Guide#mandatory-steps) section, and then going back and fixing the issue. Doing this prevents any untuned variables from skewing your retests, and means that once you fix the problem, then everything is done and you can move on to printing!
+I have found that, occasionally, I have set the Linear Advance factor to a value that is either too high or too low, and have needed to preform the Linear Advance Test a second time to get good results. If you notice slight problems that can be attributed to a wrong interpretation of a test's results, I recommend finishing the entirety of the [Per Filament Steps](#per-filament-steps) section, and then going back and fixing the issue. Doing this prevents any untuned variables from skewing your retests, and means that once you fix the problem, then everything is done and you can move on to printing!
 
 # THE GUIDE
 
-## First Time Steps
+- [First Time Steps](#first-time-steps)
+    - [First Layer Calibration](#first-layer-calibration)
+    - [Elephant's Foot Compensation](#elephants-foot-compensation)
+    - [Infill/Perimeter Encroachment Test](#infillperimeter-encroachment-test)
+    - [Bridge Flow Rate Calibration Test](#bridge-flow-rate-calibration-test)
+- [Per Filament Steps](#per-filament-steps)
+    - [Temperature Test](#temperature-test)
+    - [Volumetric Flowrate Test](#volumetric-flowrate-test)
+    - [Linear Advance Test](#linear-advance-test)
+    - [Flowrate Test](#flowrate-test)
+    - [Retraction Test](#retraction-test)
+    - [Fan Speed Test](#fan-speed-test)
+    - [Minimum Layer Time Test](#minimum-layer-time-test)
+    - [Minimum Layer Speed Test](#minimum-layer-speed-test)
+    - [Validate Tuning Results](#validate-results)
+- [Optional Steps](#optional-but-still-recommended-steps)
+    - [Material Expansion/Contraction Calibration](#material-expansioncontraction-calibration)
+    - [Manual Bed Leveling with Feeler Gauges](#manual-bed-leveling-with-feeler-gauges)
+    - [Retract/Unretract Speeds](#retraction-and-unretraction-speed-tuning)
+    - [TMC Register Tuning](#tmc-register-tuning)
+    - [VFA Testing and Tuning](#vfa-tuning-tests)
+- [Troubleshooting Results](#troubleshooting-results)
+    - [Validation Model Issues](#validation-model-issues)
 
-### **First Layer Calibration**
+# First Time Steps
+
+## **First Layer Calibration**
 
 If using an automatic bed probe, first follow the klipper docs for [Probe Calibration](https://www.klipper3d.org/Probe_Calibrate.html).
 
@@ -22,10 +46,12 @@ If your printer has bed leveling springs, run the `BED_SCREWS_ADJUST` command an
 
 The above have been completed, make a cube in your slicer. Scale it to approximately half of the total size of your bed, then unlock the scaling and change the z height to be equal to the height of your first layer. Run the print while sitting infront of your printer. As the print progresses, use the babystepping feature found in your web interface to iteratively raise or lower the bed until your layer lines look perfect. Once you reach a point you are happy with you can either let the print complete or cancel the print. Pull the layer of filament off of the bed and inspect the underside to make sure that your final adjustment is correct. Run `Z_OFFSET_APPLY_PROBE` then `SAVE_CONFIG` to save your new z-offset.
 
-### **Elephant's Foot Compensation**
+
+## **Elephant's Foot Compensation**
 - This isn't so much of a step as it is something that I just recommend doing. Elephant's foot compansation shrinks the first layer by the amount specified in the x and y axes so that your first layer squish doesn't artifically create a bigger-than-wanted footprint on the bed. I set this value at 0.1 mm to start. Typically it sits somewhere between 0 mm and 0.2 mm. I wouldn't recommend going above 0.2 mm unless you have a leveling problem, in which case you should redo the above step. If you make the elephant's foot compansation value too big, you may cause the first layer to be too small, preventing good layer stacking on top of it. You can read more about this feature [here](https://help.prusa3d.com/article/elephant-foot-compensation_114487).
-    
-### **Infill/Perimeter Encroachment Test**
+
+
+## **Infill/Perimeter Encroachment Test**
 - *File to be created*
 
 Import {file} into your slicer. Make sure that there is at least two layers of infill between the top and bottom solid layers. Print out the file and check for gaps and pin holes at the edge of the top layer. The best value for your Infill/Perimeter overlap is where these gaps and holes disappear, but there is not over extrusion in the corners of the cube.
@@ -33,8 +59,9 @@ Import {file} into your slicer. Make sure that there is at least two layers of i
 Pictures will come :)
 
 **Note**: Bigger nozzles usually have more difficulty closing these gaps. I recommend checking [this section of ellis' print tuning guide](https://ellis3dp.com/Print-Tuning-Guide/articles/infill_perimeter_overlap.html) for more solutions.
-    
-### **Bridge Flow Rate Calibration Test**
+
+
+## **Bridge Flow Rate Calibration Test**
 - Uses [Bridge-Flow-Tuning.stl](Tuning-Models/Bridge-Flow-Tuning.stl)
 
 This calibration should only be done after you have calibrated your fan speed and have figured out what a good bridging speed for your printer is. Make sure that your bridging still suffers even on 100% fan speed before using this feature. If you are satisfied with the bridging performance and dimensional accuracy of holes, skip this step, otherwise do the following.
@@ -54,25 +81,17 @@ Another picture to come
 **Note**: You will have to test this for every layer height profile that you have for your printer. Since different volumetric amounts are output at different layer heights, the amount of bridge flow rate reduction needed will vary. Generally, more is needed for larger layer heights, and less is needed for smaller layer heights. You are trying to get away with as little flow reduction as possible. Going too low on the multiplier may cause poor support for the layers on top of it or, in extreme cases, a breaking of the filament flow, causing the bridge to fail entriely (you will have to really try to do this).
 
 
-### Mandatory Steps
+# Per Filament Steps
 
-1. **Temperature Test**
-    <details>
-
-    <summary>Click here for Procedure</summary>
+## **Temperature Test**
 
     Set Hotend 10 C below the lowest recommended temperature on the spool. Unlatch extruder and set hotend to 10 C higher than the highest recommended temperature on the spool. Start slowly pushing filament by hand through the hotend at the same time, keeping as near constant pressure as possible. Watch the temperature as you push the filament, you should notice that the filament gets noticably easier to push as the temperature hits certain numbers. Once the hotend has gotten up to the final temperature, choose which of those temperatures that it got easier to push at to use. Generally, the best temperature is somewhere in the middle of the recommended temperatures on a standard 0.4mm brass nozzle, however, this is not a steadfast rule. Hardened steel nozzles tend to need to run about 10-15 C hotter than brass.
 
-    </details>
 
-2. **Volumetric Flowrate Test**
-    - Uses [Volumetric-Flow-Test-RR.3mf](Tuning-Models/Volumetric-Flow-Test-RR.3mf)
+## **Volumetric Flowrate Test**
+
+    - Uses [Volumetric-Flow-Test-RR.3mf](Tuning-Models/Volumetric_Flow_Test.3mf)
     - This test was designed by Yathani on Printables! Go check it out here: [Volumetric Flow Test for RatRig V-CORE3](https://www.printables.com/model/328223-volumetric-flow-test-for-ratrig-v-core3)
-
-    <details>
-
-    <summary>Click here for Procedure</summary>
-
 
     Import the file into PrusaSlicer, making sure to select "Import 3D models only". Turn on Spiral Vase mode as well. 
 
@@ -96,17 +115,14 @@ Another picture to come
 
     Once this test is completed and your printer is cooled, I highely recommend either restarting the printer, or, if using Klipper, issuing a `FIRMWARE_RESTART` command. The increased feedrate is not reset at the end of the print, **YOU WILL FORGET AND IT MAY CAUSE DAMAGE TO YOUR PRINTER**.
 
-    </details>
 
-3. **Linear Advance Test**
+## **Linear Advance Test**
     - Follow the klipper documentation for this and use [square_tower.stl](Tuning-Models/square_tower.stl)
     - [Klipper Pressure Advance Documentation](https://www.klipper3d.org/Pressure_Advance.html)
 
-4. **Flow test**
 
-    <details>
+## **Flowrate test**
 
-    <summary>Click here for Procedure</summary>
     Create a 25mmx25mmx25mm cube in your slicer. Set your slicer to vase mode, and take note of your external perimeter line width. You should be printing an object similar to the following.
     
     ![Flowtest-Example](Example_Pictures/Step-4/Flowrate_Test.png)
@@ -131,14 +147,10 @@ Another picture to come
 
     - +-2% flow rate is negligible due to variation of filament diameter. In other words, if your result returns a number between 0.98 and 1.02, don't change your flow rate, it will cause more problems than it will solve.
 
-    </details>
 
-5. **Retraction Test**
+## **Retraction Test**
+
     - If you haven't noticed any problems with stringing, and don't notice any in the Fan Speed Test, this step can be skipped. Generally, with a good direct drive setup, the only filaments that will need a different retraction value are very soft flexible filaments and exotic filaments such as Carbon Fiber filled PLA.
-
-    <details>
-
-    <summary>Click here for Procedure</summary>
 
     Take the config that you have been using so far, and export it from PrusaSlicer. 
     
@@ -148,15 +160,10 @@ Another picture to come
 
     ![SuperSlicer-Retraction-Test](Example_Pictures/Step-5/Extruder_Retraction_SuperSlicer.png)
 
-    </details>
 
-6. **Fan Speed Test**
+## **Fan Speed Test**
 
     - This test was designed by Abyss on Printables! Go check it out here: [Ultimate Fan Speed Test V3](https://www.printables.com/model/200347-ultimate-fan-speed-test-v3)
-
-    <details>
-
-    <summary>Click here for Procedure</summary>
 
     - Import [Ultimate_Fan_Test_v3_ABYSS.stl](Tuning-Models/Ultimate_Fan_Test_v3_ABYSS.stl) into your slicer. Use a 0.2mm layer height and change your cooling settings to the following.
     
@@ -164,35 +171,29 @@ Another picture to come
     
     This will cause your fan to spin progressively faster as the model is printed, starting at 0% fan speed and ending at 100% fan speed. When the model is finished, take a look at each marked bar and the area above it. Choose the lowest fan speed that gives good results as your minimum fan speed. Generally, no curling and decent looking bridges are the best things to look for for this setting. Then look at the bridging sections and choose the one that looks the best to you, that is your bridging fan speed. Set your maximum fan speed to somewhere between these two values. Be careful of setting it too high as strong cooling setups will decrease layer adhesion if run too fast when not needed.
 
-    </details>
 
-7. **Minimum Layer Time Test**
+## **Minimum Layer Time Test**
+
     - Uses [Minimum-Layer-Time-Test.3mf](Tuning-Models/Minimum-Layer-Time-Test.3mf)
 
-    <details>
-
-    <summary>Click here for Procedure</summary>
     - Set your minimum layer time to 5 to start, and print this model. If there is curling on the walls, increase the time by two seconds until there isn't curling anymore. The setting where there isn't anymore curling is your new minimum layer time setting.
 
-    </details>
 
-8. **Minimum Layer Speed Test**
+## **Minimum Layer Speed Test**
     - Uses [Test_Pieces_Cone-10mm-Tall.stl](Tuning-Models/Test_Pieces_Cone-10mm-Tall.stl)
 
-    <details>
-
-    <summary>Click here for Procedure</summary>
     - Set your minimum layer speed to 15mm/s. Print out this file. If the plastic looks excessively melted, lower the speed by 3 mm/s. The upper 5 mm or so of this model will never look perfect as it is unresonable to expect that kind of accuracy from a 0.4mm nozzle. Once you find a speed that you are happy with, save it. Be careful of going too low in speed, as it will cause problems to creep back in. If the nozzle is moving too slowly, it sits above one spot for too long, reheating the filament and causing the same issues as running too fast.
 
-    </details>
 
-9. **Validate Results**
+## **Validate Results**
     - Print a [Voron Cube](Tuning-Models/Voron_Design_Cube_v7.stl) to validate bridging and corner accuracy
     - Print a [Cali Dragon](Tuning-Models/Cali-Dragon_v1.stl) to validate small detail quality, layer quality, and cooling characteristics
 
-### Optional (but still recommended) Steps
 
-9. Material Expansion/Contraction Calibration
+# Optional (but still recommended) Steps
+
+## Material Expansion/Contraction Calibration
+
     <details>
 
     <summary>Click here for Procedure</summary>
@@ -201,7 +202,8 @@ Another picture to come
 
     </details>
     
-10. Also include manual bed leveling with feeler gauges and probe calibration.
+## Manual Bed Leveling with Feeler Gauges
+
     <details>
 
     <summary>Click here for Procedure</summary>
@@ -210,7 +212,8 @@ Another picture to come
 
     </details>
     
-11. Include something about tuning retraction and un-retraction speeds with the stringing-test model included.
+## Retraction and Unretraction Speed Tuning.
+
     <details>
 
     <summary>Click here for Procedure</summary>
@@ -218,8 +221,11 @@ Another picture to come
 
 
     </details>
-    
-12. VFA Tuning Tests
+
+## TMC Register Tuning
+
+## VFA Tuning Tests
+
     - 
     - 
     <details>
@@ -229,7 +235,8 @@ Another picture to come
 
 
     </details>
-    
-13. 
-14. 
-15. 
+
+
+# Troubleshooting Results
+
+## Validation Model Issues
