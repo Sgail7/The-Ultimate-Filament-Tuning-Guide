@@ -4,11 +4,17 @@
 
 This guide details how I tune in my 3d printing filaments. It takes approximately 60-70 grams of filament and a few hours of time, including print times. If your printer profiles are tuned in properly, following this guide will give you the best settings possible for your various filaments. This is NOT a guide on how to fine tune your printer's motion system and settings, for that, please see [Ellis' Excellent Print Tuning Guide](https://ellis3dp.com/Print-Tuning-Guide/). My flowrate calibration method does not agree with his, however I am more interested in the dimensional accuracy of my parts rather than their looks.
 
-This guide assumes that you are using Klipper firmware, but everything except for the probe calibration method is transferrable to any other 3D printer firmware. It also assumes that your are using PrusaSlicer, however, most, if not all, of these settings can be found in other slicers, although they may have slightly different names.
+This guide assumes that you are using Klipper firmware, but everything except for the probe calibration method is transferrable to any other 3D printer firmware. It also assumes that your are using PrusaSlicer, however most, if not all, of these settings can be found in other slicers, although they may have slightly different names.
 
-All needed models and .3mf files are included in the [Tuning Models](Tuning-Models) folder. The guide will detail which model to use for each test. I highly recommend following the **Per Filaments Steps** section of the guide in order, as it will give the least variation in results, but you may follow this guide in whatever order you choose.
+All needed models and .3mf files are included in the [Tuning Models](Tuning-Models) folder. The guide will detail which model to use for each test. I highly recommend following the [Per Filament Steps](#per-filament-steps) section of the guide in order, as it will give the least variation in results, but you may follow this guide in whatever order you choose.
 
 I have found that, occasionally, I have set the Linear Advance factor to a value that is either too high or too low, and have needed to preform the Linear Advance Test a second time to get good results. If you notice slight problems that can be attributed to a wrong interpretation of a test's results, I recommend finishing the entirety of the [Per Filament Steps](#per-filament-steps) section, and then going back and fixing the issue. Doing this prevents any untuned variables from skewing your retests, and means that once you fix the problem, everything is done and you can move on to printing!
+
+### How to import 3MF files
+
+Import the file into PrusaSlicer as you typically would a `.stl` or `.step`. When the window shown below appears, make sure to select "Import 3D models only". This will prevent you from importing my personal profiles and save a lot of headache getting rid of those.
+
+![3MF](Example_Pictures/Volumetric-Flowrate-Test/Import_3MF.png)
 
 # THE GUIDE
 
@@ -51,7 +57,7 @@ When the above have been completed, make a cube in your slicer. Scale it to appr
 
 
 ## **Elephant's Foot Compensation**
-- This isn't so much of a step as it is something that I just recommend doing. Elephant's foot compansation shrinks the first layer by the amount specified in the x and y axes so that your first layer squish doesn't artifically create a bigger-than-wanted footprint on the bed. I set this value at 0.1 mm to start. Typically it sits somewhere between 0 mm and 0.2 mm. I wouldn't recommend going above 0.2 mm unless you have a leveling problem, in which case you should redo the above step. If you make the elephant's foot compansation value too big, you may cause the first layer to be too small, preventing good layer stacking on top of it. You can read more about this feature [here](https://help.prusa3d.com/article/elephant-foot-compensation_114487).
+This isn't so much of a step as it is something that I just recommend doing. Elephant's foot compansation shrinks the first layer by the amount specified in the x and y axes so that your first layer squish doesn't artifically create a bigger-than-wanted footprint on the bed. I set this value at 0.1 mm to start. Typically it sits somewhere between 0 mm and 0.2 mm. I wouldn't recommend going above 0.2 mm unless you have a leveling problem, in which case you should redo the above step. If you make the elephant's foot compansation value too big, you may cause the first layer to be too small, preventing good layer stacking on top of it. You can read more about this feature [here](https://help.prusa3d.com/article/elephant-foot-compensation_114487).
 
 
 ## **Infill/Perimeter Encroachment Test**
@@ -96,13 +102,13 @@ Set Hotend 10 C below the lowest recommended temperature on the spool. Unlatch e
 - Uses [Volumetric-Flow-Test-RR.3mf](Tuning-Models/Volumetric_Flow_Test.3mf)
 - This test was designed by Yathani on Printables! Go check it out here: [Volumetric Flow Test for RatRig V-CORE3](https://www.printables.com/model/328223-volumetric-flow-test-for-ratrig-v-core3)
 
-Import the file into PrusaSlicer, making sure to select "Import 3D models only". Turn on Spiral Vase mode as well. 
-
-![3MF](Example_Pictures/Volumetric-Flowrate-Test/Import_3MF.png)
-
 This test works by increasing your printer's feedrate by 100% every 5 mm in z-height. For a standard flow hotend, you'll want to step up in 2 mm<sup>3</sup>/s increments; for high-flow hotends, you'll want to step up 2-5 mm<sup>3</sup>/s increments, depending on the advertised maximum flowrate of your hotend. The final volumetric flowrate will be 12 times the starting flowrate.
 
-Volumetric flow rate can be calculated as $`VFR=Layer height*Layer width*Layer Speed`$. Because layer height and layer width stay constant during a print, we want to change the layer speed of the external perimeters to control the volumtric flowrate of the test. Rearranging the equation, and using 2 mm<sup>3</sup>/s as the target volumtric flow rate, we can find our needed external perimeter speed for this print.
+Volumetric flow rate can be calculated as:
+
+$$VFR=Layer height*Layer width*Layer Speed$$
+
+Because layer height and layer width stay constant during a print, we want to change the layer speed of the external perimeters to control the volumtric flowrate of the test. Rearranging the equation, and using 2 mm<sup>3</sup>/s as the target volumtric flow rate, we can find our needed external perimeter speed for this print.
 
 $$Layer Speed=2/(Layer width*Layer height)$$
 
@@ -112,7 +118,7 @@ $$Layer Speed=2/(0.4*0.2)$$
 
 $$Layer Speed=25mm/s$$
 
-Set your external perimeter speed to the value you obtain, and run the print. If you feel that the final volumetric flow rate is far past the limit of your hotend, you can scale the model in only z-height in PrusaSlicer to obtain a lower final volumetric flow rate.
+Turn on Spiral Vase mode, set your external perimeter speed to the value you obtain, and run the print. If you feel that the final volumetric flow rate is far past the limit of your hotend, you can scale the model in z-height only in PrusaSlicer to obtain a lower final volumetric flow rate.
 
 ![External-Perimeter-Location](Example_Pictures/Volumetric-Flowrate-Test/External_Perimeter_Speed_Location.png)
 
@@ -123,6 +129,7 @@ Once this test is completed and your printer is cooled, I highely recommend eith
 - Follow the klipper documentation for this and use [square_tower.stl](Tuning-Models/square_tower.stl)
 - [Klipper Pressure Advance Documentation](https://www.klipper3d.org/Pressure_Advance.html)
 
+- **Note:** If flowrate is wildly off target, running pressure advance and using the value found can exacerbate the issue. In these instances, running the Linear Advance Test again after the Flowrate Test can alleviate these issues. Typically, anything greater than a 10% deviation of flowrate requires a recalibration of Linear Advance with the newly found flowrate.
 
 ## **Flowrate Test**
 
@@ -172,7 +179,7 @@ Import it into SuperSlicer and save it. Now, use the built in Retraction Calibra
     
 ![Fan_Speed_Settings](Example_Pictures/Fan-Speed-Test/Fan_Test_Settings.webp)
     
-This will cause your fan to spin progressively faster as the model is printed, starting at 0% fan speed and ending at 100% fan speed. When the model is finished, take a look at each marked bar and the area above it. Choose the lowest fan speed that gives good results as your minimum fan speed. Generally, no curling and decent looking bridges are the best things to look for for this setting. Look at the bridging sections and choose the one that looks the best to you, that is your bridging fan speed. Set your maximum fan speed to somewhere between these two values. Beware of setting it too high, as strong cooling setups will decrease layer adhesion if run too fast when not needed.
+This will cause your fan to spin progressively faster as the model is printed, starting at 0% fan speed and ending at 100% fan speed. When the model is finished, take a look at each marked bar and the area above it. Choose the lowest fan speed that gives good results as your minimum fan speed. Generally, no curling and decent to good looking bridges are what to look at for this setting. Look at the bridging sections and choose the one that looks the best to you, that is your bridging fan speed. Set your maximum fan speed to somewhere between these two values. Beware of setting it too high, as strong cooling setups will decrease layer adhesion if run too fast when not needed.
 
 
 ## **Minimum Layer Time Test**
@@ -191,7 +198,7 @@ Set your minimum layer time to 5 seconds and print this model. If the outer wall
 
 Set your minimum layer speed to 15mm/s and print this file. If the plastic looks excessively melted, lower the speed by 3 mm/s. The upper 5 mm or so of this model will never look perfect as it is unresonable to expect that kind of accuracy from a 0.4mm nozzle. Once you find a speed that you are happy with, save it. Be careful of going too low in speed, as it will cause problems to creep back in. The sweet spot can be found where the nozzle is moving slow enough to allow the part cooling to work effectively, but fast enough that the nozzle is not reheating the filament after it has been deposited.
 
-![Location-Lspeed](Example_Pictures/Minimum-Layer-Time/Setting-Location.png)
+![Location-Lspeed](Example_Pictures/Minimum-Print-Speed/Setting-Location.png)
 
 
 ## **Validate Results**
@@ -203,23 +210,59 @@ Set your minimum layer speed to 15mm/s and print this file. If the plastic looks
 
 ## Material Expansion/Contraction Calibration
 
+- Finding this setting is useful for using filaments such as ABS. It is worth noting however, that well designed parts such as things designed by the Voron Team have been designed with shrinkage already in mind. This means that if you were to use your expansion settings on those parts, they would be printed incorrectly.
 
+- If the x, y, and z give different percentages of shrinkage, you will want to scale your parts by those three values in each of their respective axes. Filaments don't always scale exactly the same in all axes.
 
-## Manual Bed Leveling with Feeler Gauges
+Start by slicing a 25x25x25mm cube in your slicer on your normal settings. Print this cube in PLA or another control filament that doesn't shrink or expand much.
 
+Measure the length, width, and height of the cube with calipers. Now, slice another 25x25x25mm cube and print it in the filament you are testing. Measure the length, width, and height of this cube, and compare it to the control cube.
 
+Divide the control cube's length, width, and height by the test cube's length, width, and height. Take those three values and average them. This is the value by which you will want to scale all models printed in that filament to maintain the intended dimensional accuracy. An example of this can be seen below.
 
-## Retraction and Unretraction Speed Tuning.
+$$ControlCube=25.1mm*25.2mm*25mm$$
 
+$$TestCube=24.8mm*24.8mm*24.8mm$$
 
+Now, find the average of the x, y, and z directions:
+
+$$average_x=(25.1/24.8)=1.012$$
+
+$$average_y=(25.2/24.8)=1.016$$
+
+$$average_z=(25/24.8)=1.008$$
+
+$$average=(1.012+1.016+1.008)/3$$
+
+$$average=1.012$$
+
+In this example, this is the expansion multiplier you would use for the test filament. If your slicer scales in percentages, that answer translates into 101.2%.
+
+## Retraction and Unretraction Speed Tuning
+
+- **Note for geared extruders:** There is a point, typically from 40-50 mm/s, where your extruder will start skipping steps on retraction. If you find that you are needing speeds this high, consider trying new filament or retuning retraction. If you still go ahead with those speeds, sit and watch your printer while the test prints and listen for the extruder motor skipping steps.
+
+- Typically the retraction/unretraction speed that your printer ships with is good for printing with. This is one of those settings that makes a relatively small difference once you get past settings that are too slow.
+
+- After completing this tuning, it is a good idea to go back and retune your retraction distance. I have had my retraction distance change by as much as 2mm after doing this tuning.
+
+Once you have completed the [Retraction Test](#retraction-test) portion of this guide, you may also tune your Retraction and Unretraction speeds. This will be achieved through the use of [Teaching Tech's 3D printer calibration website](https://teachingtechyt.github.io/calibration.html#retraction).
+
+Navigate to the "Retraction Tuning" tab, if the hyperlink above does not take you there. Once there, scroll down until you see the "Retraction" section. Once there change your Retraction distancee to what you are currently using for all heights. Then increment your Retraction and Prime (unretract) speeds in increments of 5 as seen in the picture below.
+
+![retract-unretract-settings](Example_Pictures/Retraction-Unretraction/Settings.png)
+
+Change the rest of the settings in the tool to match what you use on your printer, and then export the gcode. **MAKE SURE TO CHECK THIS GCODE BEFORE RUNNING IT**. Using your slicer's gcode viewer is a good way to do this. I generally don't like using external gcode creation websites, because it is easy to put in a wrong setting and cause your printer to do something unwanted.
+
+Run the print and mark what speed gives you the best results. If desired, the retraction and unretraction speed can be tuned separately to give you more accurate results.
 
 ## TMC Register Tuning
 
-
+Still in the process of researching this.
 
 ## VFA Tuning Tests
 
-
+Still in the process of researching this.
 
 # Troubleshooting Results
 
