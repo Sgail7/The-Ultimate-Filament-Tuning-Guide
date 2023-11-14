@@ -4,11 +4,11 @@
 
 This guide details how I tune in my 3d printing filaments. It takes approximately 60-70 grams of filament and a few hours of time, including print times. If your printer profiles are tuned in properly, following this guide will give you the best settings possible for your various filaments. This is NOT a guide on how to fine tune your printer's motion system and settings, for that, please see [Ellis' Excellent Print Tuning Guide](https://ellis3dp.com/Print-Tuning-Guide/). My flowrate calibration method does not agree with his, however I am more interested in the dimensional accuracy of my parts rather than their looks.
 
-This guide assumes that you are using Klipper firmware, but everything except for the probe calibration method is transferrable to any other 3D printer firmware. It also assumes that your are using PrusaSlicer, however most, if not all, of these settings can be found in other slicers, although they may have slightly different names.
+This guide assumes that you are using [Klipper firmware](https://www.klipper3d.org/), but everything except for the probe calibration method is transferrable to any other 3D printer firmware. It also assumes that your are using [PrusaSlicer](https://www.prusa3d.com/page/prusaslicer_424/), however most, if not all, of these settings can be found in other slicers, although they may have slightly different names.
 
 All needed models and .3mf files are included in the [Tuning Models](Tuning-Models) folder. The guide will detail which model to use for each test. I highly recommend following the [Per Filament Steps](#per-filament-steps) section of the guide in order, as it will give the least variation in results, but you may follow this guide in whatever order you choose.
 
-I have found that, occasionally, I have set the Linear Advance factor to a value that is either too high or too low, and have needed to preform the Linear Advance Test a second time to get good results. If you notice slight problems that can be attributed to a wrong interpretation of a test's results, I recommend finishing the entirety of the [Per Filament Steps](#per-filament-steps) section, and then going back and fixing the issue. Doing this prevents any untuned variables from skewing your retests, and means that once you fix the problem, everything is done and you can move on to printing!
+If you notice slight problems that can be attributed to a wrong interpretation of a test's results, I recommend finishing the entirety of the [Per Filament Steps](#per-filament-steps) section, and then going back and fixing the issue. Doing this prevents any untuned variables from skewing your retests, and means that once you fix the problem, everything is done and you can move on to printing!
 
 ### How to import 3MF files
 
@@ -37,7 +37,6 @@ Import the file into PrusaSlicer as you typically would a `.stl` or `.step`. Whe
 
 - [Optional Steps](#optional-but-still-recommended-steps)
     - [Material Expansion/Contraction Calibration](#material-expansioncontraction-calibration)
-    - [Manual Bed Leveling with Feeler Gauges](#manual-bed-leveling-with-feeler-gauges)
     - [Retract/Unretract Speeds](#retraction-and-unretraction-speed-tuning)
     - [TMC Register Tuning](#tmc-register-tuning)
     - [VFA Testing and Tuning](#vfa-tuning-tests)
@@ -87,15 +86,32 @@ Your final result should look something like this:
 
 **Picture to come**
 
-**Note**: You will have to test this for every layer height profile that you have for your printer. Since different volumetric amounts are output at different layer heights, the amount of bridge flow rate reduction needed will vary. Generally, more is needed for larger layer heights, and less is needed for smaller layer heights. You are trying to get away with as little flow reduction as possible. Going too low on the multiplier may cause poor support for the layers on top of it or, in extreme cases, a breaking of the filament flow, causing the bridge to fail entriely (you will have to really try to do this).
+**Note**: You will have to test this for every layer height profile that you have for your printer. Since different volumetric amounts are output at different layer heights, the amount of bridge flow rate reduction needed will vary. Generally, more is needed for larger layer heights, and less is needed for smaller layer heights. You are trying to get away with as little flow reduction as possible. Going too low on the multiplier may cause poor support for the layers on top of it or, in extreme cases, a breaking of the filament flow, causing the bridge to fail entriely (you will have to make a conceited effort to achieve this).
 
 
 # Per Filament Steps
 
 ## **Temperature Test**
 
-Set Hotend 10 C below the lowest recommended temperature on the spool. Unlatch extruder and set hotend to 10 C higher than the highest recommended temperature on the spool. Start slowly pushing filament by hand through the hotend at the same time, keeping as near constant pressure as possible. Watch the temperature as you push the filament, you should notice that the filament gets noticably easier to push as the temperature hits certain numbers. Once the hotend has gotten up to the final temperature, choose which of those temperatures that it got easier to push at to use. Generally, the best temperature is somewhere in the middle of the recommended temperatures on a standard 0.4mm brass nozzle, however, this is not a steadfast rule. Hardened steel nozzles tend to need to run about 10-15 C hotter than brass.
+**Note:** For this test, you will need to unlatch your extruder in some way. Whether that be removing the tension knob on a bondtech gear set or holding the lever arm open on a Mk8 style extruder. Essentially you don't want the extruder gear(s) touching the filament in anyway, if possible.
 
+Read the manufacture's rated temperatures for your filament. Choose a starting point that is 10°C below the lowest temperature, and an ending point that is 10°C higher than the highest temperature. For example, a range of `190°C - 220°C` would mean that you want to run the hotend through a temperature range of `180°C - 230°C`. Set your hotend to your starting point and let it stabilize.
+
+Unlatch your extruder and grip the filament with your hand. The goal is to push filament through the extruder with as constant of a pressure as possible. Once in position, set the temperature of your hotend to your ending point, and start pushing. Keep a close eye on the temperature as it rises and as you keep pushing.
+
+You will notice that the filament starts moving noticably faster when the hotend hits certain temperatures. Make a note of those points in your head as you push the filament. Once the hotend reaches your chosen ending point, you can stop pushing the filament. Turn your hotend heater off and relatch your extruder.
+
+Write down the tempatures where you noticed the resistance on the filament decrease. Generally, picking a temperature in the middle of the manufacture's rated temperatures is a good all around setting. Avoid the trap of setting the filament temperature as low as possible, as it can lead to extruder skipping and extruded lines that were not fully melted in the hotend.
+
+Continuing the example from earlier, say there's a filament with a rated temperature range of `190°C - 220°C`. I'll set my hotend to run through a range of `180°C - 230°C` for this test. I do the test as described above, and I find that the points at which the resistance on the filament dropped were `190°C, 210°C, and 230°C`. Wanting a good overall setting, I'll choose `210°C` as the temperature for this filament.
+
+### Good Rules of Thumb
+
+- Generally, the best temperature is somewhere in the middle of the recommended temperatures on a standard 0.4mm brass nozzle, however, this is not a steadfast rule. Hardened steel nozzles tend to need to run about 10-15 C hotter than brass to compensate for their lower heat transfer coefficient.
+
+- Adding 5°C to your chosen temperature can be beneficial if you tend to prefer setting your filaments to lower temperatures. It will prevent your filament from being too resistive to extrusion while still maintaining the qualities that you are looking for.
+
+- If pushing for high volumetric flow rates, chosing the highest temperature where the resistance on the filament dropped is the best option for this test. Keep in mind that doing this will cause lower volumetric flow rate areas in your models to string more heavily.
 
 ## **Volumetric Flowrate Test**
 
@@ -126,10 +142,19 @@ Once this test is completed and your printer is cooled, I highely recommend eith
 
 
 ## **Linear Advance Test**
-- Follow the klipper documentation for this and use [square_tower.stl](Tuning-Models/square_tower.stl)
-- [Klipper Pressure Advance Documentation](https://www.klipper3d.org/Pressure_Advance.html)
+- Follow [Ellis' Print Tuning Guide](https://ellis3dp.com/Print-Tuning-Guide/) for this and use [his online calibration tool to generate your gcode.](https://ellis3dp.com/Pressure_Linear_Advance_Tool/) Do interations down to 0.001 for Direct Drive extruders, and down to 0.01 for Bowden extruders.
+- [Ellis' Pressure Advance Documentation](https://ellis3dp.com/Print-Tuning-Guide/articles/pressure_linear_advance/pattern_method.html)
+- [Klipper Pressure Advance Documentation for Extra Information](https://www.klipper3d.org/Pressure_Advance.html)
 
 - **Note:** If flowrate is wildly off target, running pressure advance and using the value found can exacerbate the issue. In these instances, running the Linear Advance Test again after the Flowrate Test can alleviate these issues. Typically, anything greater than a 10% deviation of flowrate requires a recalibration of Linear Advance with the newly found flowrate.
+
+As I've explained in the [Retraction/Unretraction Speed Tuning Section](#retraction-and-unretraction-speed-tuning), I am not a fan of external gcode generators. However I feel the need to explain my preference for this method of pressure advance calibration, as I used to recommend the [Official Klipper](https://www.klipper3d.org/Pressure_Advance.html#tuning-pressure-advance) method.
+
+I have found that using the Klipper Tuning Tower Method has reliably and repeatedly given me pressure advance values that are higher than what a filament requires. These values lead to print artifacts that round off corner entries, create wall separation, and cause very high [Infill/Perimeter Overlap](#infillperimeter-encroachment-test) values to be needed. Because each of these issues can also be caused by other variables, and they are seemingly unrelated when not considering specifically pressure advance, it can lead one on a wild goose chase trying to solve the issue.
+
+In addition to that, it can be very hard to tell what a good pressure advance value is due to each of the corners of the model showing different amounts of artifacting. Trying to measure the inside small corners of the model is more accurate, but is a pain with calipers and impossible with a micrometer of reasonable size.
+
+In contrast, Ellis' pattern method is more accurate, faster, and uses less filament. It's only two downsides are that it requires iterations and an external gcode generator. Despite that I exclusively use this method now to avoid the afformentioned issues and gain from the afformentioned benefits.
 
 ## **Flowrate Test**
 
@@ -175,11 +200,15 @@ Import it into SuperSlicer and save it. Now, use the built in Retraction Calibra
 
 - This test was designed by Abyss on Printables! Go check it out here: [Ultimate Fan Speed Test V3](https://www.printables.com/model/200347-ultimate-fan-speed-test-v3)
 
+**Note:** Fan speed is generally forgiving. If you are getting worse results than expected you can raise or lower any of the fan speeds you set in this step. This step always gets me perfect fan speeds, but it may take some practice before you gain a feel for how to choose settings with this method. Essentially, you're not locked in to what you choose, just use it as a guideline.
+
 - Import [Ultimate_Fan_Test_v3_ABYSS.stl](Tuning-Models/Ultimate_Fan_Test_v3_ABYSS.stl) into your slicer. Use a 0.2mm layer height and change your cooling settings to the following.
-    
+
 ![Fan_Speed_Settings](Example_Pictures/Fan-Speed-Test/Fan_Test_Settings.webp)
-    
-This will cause your fan to spin progressively faster as the model is printed, starting at 0% fan speed and ending at 100% fan speed. When the model is finished, take a look at each marked bar and the area above it. Choose the lowest fan speed that gives good results as your minimum fan speed. Generally, no curling and decent to good looking bridges are what to look at for this setting. Look at the bridging sections and choose the one that looks the best to you, that is your bridging fan speed. Set your maximum fan speed to somewhere between these two values. Beware of setting it too high, as strong cooling setups will decrease layer adhesion if run too fast when not needed.
+
+This will cause your fan to spin progressively faster as the model is printed, starting at 0% fan speed and ending at 100% fan speed. When the model is finished, take a look at each marked bar and the area above it. Choose the lowest fan speed that gives good results as your minimum fan speed. Generally, no curling and decent to good looking bridges are what to look at for this setting. Look at the bridging sections and choose the one that looks the best to you, that is your bridging fan speed.
+
+You may want to take a picture of your model, because the next step involved intentionally breaking it apart. Start from the top of the model and work your way down, breaking it apart section by section. The sections will get harder to break apart as the fan speed at the point in the model gets lower. As you break it apart, feel for where the model gets harder to snap. There should be a point where it doesn't get any harder, and that is where your maximum layer adhesion is achieved. Take note of the highest fan speed at which the model has the same resistance to breaking as your chosen minimum fan speed. Set this fan speed to your maximum fan speed.
 
 
 ## **Minimum Layer Time Test**
@@ -196,7 +225,11 @@ Set your minimum layer time to 5 seconds and print this model. If the outer wall
 ## **Minimum Layer Speed Test**
 - Uses [Test_Pieces_Cone-10mm-Tall.stl](Tuning-Models/Test_Pieces_Cone-10mm-Tall.stl)
 
-Set your minimum layer speed to 15mm/s and print this file. If the plastic looks excessively melted, lower the speed by 3 mm/s. The upper 5 mm or so of this model will never look perfect as it is unresonable to expect that kind of accuracy from a 0.4mm nozzle. Once you find a speed that you are happy with, save it. Be careful of going too low in speed, as it will cause problems to creep back in. The sweet spot can be found where the nozzle is moving slow enough to allow the part cooling to work effectively, but fast enough that the nozzle is not reheating the filament after it has been deposited.
+I recommend printing 5 copies of this model set at the following minimum layer speeds, `15 mm/s, 12 mm/s, 10 mm/s, 8 mm/s, 5 mm/s, and 3 mm/s`. Label each of the models as you print with a sharpie or other method, so that you do not forget which one is which. Put the printed models side by side and compare them to see which has the least amount of deformed plastic at the top of the model. Set this speed as your minimum layer speed.
+
+**Note:** The upper 5 mm or so of this model will never look perfect as it is unresonable to expect that kind of accuracy from a 0.4mm nozzle. Once you find a speed that you are happy with, save it, set it, and forget it. Going too low in speed will cause problems seen at higher speeds to creep back in. This happens because the nozzle has more time in contact with a specific layer at slower speeds, eventually causing it to heat the filament more than the extra cooling can compensate for. 
+
+The sweet spot can be found where the nozzle is moving slow enough to allow the part cooling to work effectively, but fast enough that the nozzle is not reheating the filament after it has been deposited.
 
 ![Location-Lspeed](Example_Pictures/Minimum-Print-Speed/Setting-Location.png)
 
@@ -213,6 +246,7 @@ Set your minimum layer speed to 15mm/s and print this file. If the plastic looks
 - Finding this setting is useful for using filaments such as ABS. It is worth noting however, that well designed parts such as things designed by the Voron Team have been designed with shrinkage already in mind. This means that if you were to use your expansion settings on those parts, they would be printed incorrectly.
 
 - If the x, y, and z give different percentages of shrinkage, you will want to scale your parts by those three values in each of their respective axes. Filaments don't always scale exactly the same in all axes.
+- Some brands like ProtoPasta provide datasheets for their High Temp filaments that give scaling factors for annealing. I recommend following those first for those filaments and testing your results, then following this section with those compensations already put in place **ONLY** if you have problems. Chasing perfection with this kind of process will only lead to disappointment.
 
 Start by slicing a 25x25x25mm cube in your slicer on your normal settings. Print this cube in PLA or another control filament that doesn't shrink or expand much.
 
@@ -240,11 +274,11 @@ In this example, this is the expansion multiplier you would use for the test fil
 
 ## Retraction and Unretraction Speed Tuning
 
-- **Note for geared extruders:** There is a point, typically from 40-50 mm/s, where your extruder will start skipping steps on retraction. If you find that you are needing speeds this high, consider trying new filament or retuning retraction. If you still go ahead with those speeds, sit and watch your printer while the test prints and listen for the extruder motor skipping steps.
+- **Note for geared extruders:** There is a point, typically from 40-50 mm/s, where your extruder will start skipping steps on retraction. If you find that you are needing speeds this high, consider drying your filament or retuning retraction. If you still go ahead with those speeds, sit and watch your printer while the test prints and listen for the extruder motor skipping steps.
 
 - Typically the retraction/unretraction speed that your printer ships with is good for printing with. This is one of those settings that makes a relatively small difference once you get past settings that are too slow.
 
-- After completing this tuning, it is a good idea to go back and retune your retraction distance. I have had my retraction distance change by as much as 2mm after doing this tuning.
+- After completing this tuning, it is a good idea to go back and retune your retraction distance. I have had my retraction distance change by as much as 2mm after doing this tuning on bowden printers.
 
 Once you have completed the [Retraction Test](#retraction-test) portion of this guide, you may also tune your Retraction and Unretraction speeds. This will be achieved through the use of [Teaching Tech's 3D printer calibration website](https://teachingtechyt.github.io/calibration.html#retraction).
 
