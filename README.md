@@ -2,23 +2,33 @@
 
 ### How to tune 3D printer filaments to perfection!
 
-This guide details how I tune in my 3d printing filaments. It takes approximately 60-70 grams of filament and a few hours of time, including print times. If your printer profiles are tuned in properly, following this guide will give you the best settings possible for your various filaments. This is NOT a guide on how to fine tune your printer's motion system and settings, for that, please see [Ellis' Excellent Print Tuning Guide](https://ellis3dp.com/Print-Tuning-Guide/). My flowrate calibration method does not agree with his, however I am more interested in the dimensional accuracy of my parts rather than their looks.
+This guide details how I tune in my 3d printing filaments. It takes approximately 80 grams of filament and a few hours of time, including print times. If your printer profiles are tuned in properly, following this guide will give you the best settings possible for your various filaments. This is **NOT** a guide on how to fine tune your printer's motion system and settings, for that, please see [Ellis' Excellent Print Tuning Guide](https://ellis3dp.com/Print-Tuning-Guide/). Both Ellis' and myself's Flowrate Test work, although I believe that my method gives more accurate results. Whichever you would like to use is up to you.
 
-This guide assumes that you are using [Klipper firmware](https://www.klipper3d.org/), but everything except for the probe calibration method is transferrable to any other 3D printer firmware. It also assumes that your are using [PrusaSlicer](https://www.prusa3d.com/page/prusaslicer_424/), however most, if not all, of these settings can be found in other slicers, although they may have slightly different names.
+### Things to Know
 
-All needed models and .3mf files are included in the [Tuning Models](Tuning-Models) folder. The guide will detail which model to use for each test. I highly recommend following the [Per Filament Steps](#per-filament-steps) section of the guide in order, as it will give the least variation in results, but you may follow this guide in whatever order you choose.
+This guide assumes that you are using [Klipper firmware](https://www.klipper3d.org/), but everything except for the probe calibration method is transferrable to any other 3D printer firmware. It also assumes that your are using [PrusaSlicer](https://www.prusa3d.com/page/prusaslicer_424/), however most, if not all, of these settings can be found in other slicers, although they may have slightly different names. Lastly, it assumes that you know how to slice for your machine and have a general knowledge of what the settings in your slicer modify. There is a plethora of knowledge online if you are confused. I highly recommend just looking up whatever you would like to know that isn't explained here.
+
+All needed models and .3mf files are included in the [Tuning Models](Tuning-Models) folder. The guide will detail which file to use for each test. I highly recommend following the [Per Filament Steps](#per-filament-steps) section of the guide in order, as it will give the least variation in results, but you may follow this guide in whatever order you choose.
 
 If you notice slight problems that can be attributed to a wrong interpretation of a test's results, I recommend finishing the entirety of the [Per Filament Steps](#per-filament-steps) section, and then going back and fixing the issue. Doing this prevents any untuned variables from skewing your retests, and means that once you fix the problem, everything is done and you can move on to printing!
 
-### How to import 3MF files
+# How to import 3MF files
 
-Import the file into PrusaSlicer as you typically would a `.stl` or `.step`. When the window shown below appears, make sure to select "Import 3D models only". This will prevent you from importing my personal profiles and save a lot of headache getting rid of those.
+Import the file into PrusaSlicer by **dragging and dropping it into the program**. If you use the `"Import Project..."` or `"Add..."` buttons, it will import the file with my personal profiles, which is a major headache. When the window shown below appears, make sure to select `"Import 3D models only"`. This will prevent you from importing my personal profiles and, again, will save a lot of headache getting rid of those.
 
 ![3MF](Example_Pictures/Volumetric-Flowrate-Test/Import_3MF.png)
 
+# Feedback and Additions
+
+This guide was created through my years of experience and the accumulated knowledge of this community. That being said information can be wrong, so if there is an issue with this guide, please open an issue on this repo! I'll get back to you and fix it as soon as I can. It doesn't matter if its a typo or an entirely wrong section, if something's not right, I'd like to make sure it's made right. 
+
+If there is something that you think should be added to this guide, please submit a pull request or an issue! For example, I've been looking for good ways to tune the `Dynamic Fan Speeds` and `Enable Fan if Layer Print Time is Below:` settings!
+
+Lastly, if you use this guide and find it helpful, please give it a star! It helps me know that other's find this guide useful and would benefit from it being updated whenever I figure out something new.
+
 # THE GUIDE
 
-- [First Time Steps](#first-time-steps)
+- [One-Time Steps](#one-time-steps)
     - [First Layer Calibration](#first-layer-calibration)
     - [Elephant's Foot Compensation](#elephants-foot-compensation)
     - [Infill/Perimeter Encroachment Test](#infillperimeter-encroachment-test)
@@ -44,11 +54,13 @@ Import the file into PrusaSlicer as you typically would a `.stl` or `.step`. Whe
 - [Troubleshooting Results](#troubleshooting-results)
     - [Validation Model Issues](#validation-model-issues)
 
-# First Time Steps
+# One-Time Steps
 
 ## **First Layer Calibration**
 
 If using an automatic bed probe, first follow the klipper docs for [Probe Calibration](https://www.klipper3d.org/Probe_Calibrate.html).
+
+- **Note:** The following is less of a one-time step and more of a "you should do this biweekly" step.
 
 If your printer has bed leveling springs, run the `BED_SCREWS_ADJUST` command and use either a 0.10 mm feeler gauge or a sheet of A4 paper to adjust the bed to be in parallel with the gantry. Do this even if you have an automatic leveling probe installed.
 
@@ -65,6 +77,28 @@ This isn't so much of a step as it is something that I just recommend doing. Ele
 Import [Perimeter-Overlap-Test](Tuning-Models/Perimeter-Overlap-Test.3mf) into your slicer. Make sure that there is at least two layers of infill between the top and bottom solid layers. Print out the file and check for gaps and pin holes at the edge of the top layer. The best value for your Infill/Perimeter overlap is where these gaps and holes disappear, but there is not over extrusion in the corners of the cube. The screenshot below shows what Perimeter Overlap Percentages each test model is printed at.
 
 ![Perimeter-Overlap-Percentages](Example_Pictures/Infill-Perimeter-Encroachment/Percentages.png)
+
+<details><summary>Click here to See Example</summary>
+<p>
+
+![Overlap-Example](Example_Pictures\Infill-Perimeter-Encroachment\Example.jpg)
+
+Here is an example of perimeter encroachment that I printed on my heavily modified Ender 3. The values used are the same as the screenshot from the slicer.
+
+- A symptom of too little perimeter encroachment can be found in the 0% and 5% squares.
+    - The pin holes at the edges of the top layer indicate that not enough filament is being extruded to properly bond to the walls.
+
+- The 10% through 25% squares all show signs of too much perimeter encroachment.
+    - The point where the top layer meets the walls causes a buldge at that contact point, rasing the edge of the top surface.
+    - The beginning corner of the higher percentage squares can be seen to be severely over extruded. The 10% square has this also, but that is because the print ended in that spot.
+    - It may be hard to see on camera, but the 20% and 25% squares also have ridges on their top surfaces that correspond to the extrusion lines on that surface, which is a result of over extrusion
+
+From this test I can deduce that my ideal perimeter encroachment lies somewhere between 5% and 10%. To find this ideal encroachment, you can either change the values of the squares and run the test again (i.e. 5%, 6%, 7%, etc...), or you can change it as you do prints and finalize it when the top surface of those prints looks ideal.
+
+Personally, I would recommend changing it by small amounts as you do prints. It won't affect your prints much, and will save you time and filament on another test print.
+
+</p>
+</details>
 
 **Note**: Bigger nozzles usually have more difficulty closing these gaps. I recommend checking [this section of Ellis' print tuning guide](https://ellis3dp.com/Print-Tuning-Guide/articles/infill_perimeter_overlap.html) for more solutions.
 
@@ -84,9 +118,32 @@ Once these are printed, you are looking for the highest flow ratio that does not
 
 Your final result should look something like this:
 
-**Picture to come**
+<details><summary>Click here to See Pictures</summary>
+<p>
 
-**Note**: You will have to test this for every layer height profile that you have for your printer. Since different volumetric amounts are output at different layer heights, the amount of bridge flow rate reduction needed will vary. Generally, more is needed for larger layer heights, and less is needed for smaller layer heights. You are trying to get away with as little flow reduction as possible. Going too low on the multiplier may cause poor support for the layers on top of it or, in extreme cases, a breaking of the filament flow, causing the bridge to fail entriely (you will have to make a conceited effort to achieve this).
+Here are a few pieces of the bridge flowrate test that I printed on my heavily modified Ender 3.
+
+- This example was printed with a 1.0 ratio.
+    - The top of the hole shows plastic that is severely protruding into the hole. This indicates that the flowrate is too high and needs to be lowered.
+
+![High](Example_Pictures\Bridge-Flow-Rate\High.jpg)
+
+- This example was printed with a 0.4 ratio.
+    - At the top of the hole, the bridging lines seem to be barely touching each other and in some cases being stretched thin near their ends. This indicates that the flowrate is too low and needs to be raised.
+
+![Low](Example_Pictures\Bridge-Flow-Rate\Low.jpg)
+
+- This example was printed with a 0.7 ratio.
+    - The bridge lines at the top of the hole are nice and even, touching their neighbors without protruding into the hole. This is the correct flowrate for this printer and infact is the flowrate I use for a 0.20 mm layer height, which is what is pictured.
+
+![Correct](Example_Pictures\Bridge-Flow-Rate\Just_Right.jpg)
+
+- **Note:** It is very hard to take pictures of this feature because of the size of the pieces and lighting. I promise that the differences between the flowrate ratios are much more clear when doing this test in real life.
+
+</p>
+</details>
+
+**Note**: You will have to test this for every layer height profile that you have for your printer. Since different volumetric amounts are output at different layer heights, the amount of bridge flow rate reduction needed will vary. Generally, more is needed for larger layer heights, and less is needed for smaller layer heights. You are trying to get away with as little flow reduction as possible. Going too low on the multiplier may cause poor support for the layers on top of it or, in extreme cases, a breaking of the filament flow, causing the bridge to fail entriely (you will have to make a conceited effort to achieve the latter).
 
 
 # Per Filament Steps
@@ -223,7 +280,7 @@ Set your minimum layer time to 5 seconds and print this model. If the outer wall
 
 
 ## **Minimum Layer Speed Test**
-- Uses [Test_Pieces_Cone-10mm-Tall.stl](Tuning-Models/Test_Pieces_Cone-10mm-Tall.stl)
+- Uses [Minimum-Layer-Speed-Cone.stl](Tuning-Models/Minimum-Layer-Speed-Cone.stl)
 
 I recommend printing 5 copies of this model set at the following minimum layer speeds, `15 mm/s, 12 mm/s, 10 mm/s, 8 mm/s, 5 mm/s, and 3 mm/s`. Label each of the models as you print with a sharpie or other method, so that you do not forget which one is which. Put the printed models side by side and compare them to see which has the least amount of deformed plastic at the top of the model. Set this speed as your minimum layer speed.
 
