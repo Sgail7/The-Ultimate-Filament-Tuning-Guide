@@ -179,7 +179,7 @@ This test works by increasing your printer's feedrate by 100% every 5 mm in z-he
 
 Volumetric flow rate can be calculated as:
 
-$$VFR=Layer height*Layer width*Layer Speed$$
+$$VFR=Layer height * Layer width * Layer Speed$$
 
 Because layer height and layer width stay constant during a print, we want to change the layer speed of the external perimeters to control the volumtric flowrate of the test. Rearranging the equation, and using 2 mm<sup>3</sup>/s as the target volumtric flow rate, we can find our needed external perimeter speed for this print.
 
