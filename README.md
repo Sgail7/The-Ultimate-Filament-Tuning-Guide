@@ -215,7 +215,7 @@ In contrast, Ellis' pattern method is more accurate, faster, and uses less filam
 
 ## **Flowrate Test**
 
-Create a 25mmx25mmx25mm cube in your slicer. Set your slicer to vase mode, and take note of your external perimeter line width. You should be printing an object similar to the following.
+Create a 25mmx25mmx25mm cube in your slicer. Set your slicer to Spiral Vase mode, and take note of your external perimeter line width. You should be printing an object similar to the following.
     
 ![Flowtest-Example](Example_Pictures/Flowrate-Test/Flowrate_Test.png)
 
